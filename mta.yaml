@@ -1,0 +1,109 @@
+## Generated mta.yaml based on template version 0.4.0
+## appName = bookshop
+## language=nodejs; multiTenant=false
+## approuter=  //npx -p @sap/cds-dk 
+_schema-version: '3.1'
+ID: bookshop
+version: 1.0.0
+description: "A simple CAP project."
+parameters:
+  enable-parallel-deployments: true
+   
+build-parameters:
+  before-all:
+   - builder: custom
+     commands:
+      - npm install --production
+      - cds build --production
+
+
+     
+
+
+
+modules:
+
+
+
+
+ # --------------------- SERVER MODULE ------------------------
+ - name: bookshop-srv
+ # ------------------------------------------------------------
+   type: nodejs
+   path: gen/srv
+   requires:
+    # Resources extracted from CAP configuration
+     - name: bookshop-db
+     - name: bookshop-uaa
+     - name: bookshop-dest
+   provides:
+     - name: db-srv-api      # required by consumers of CAP services (e.g. approuter)
+       properties:
+         url: ${default-url}
+   
+
+
+ # -------------------- SIDECARMODULE ------------------------
+ - name: bookshop-db-deployer
+ # ------------------------------------------------------------
+   type: hdb
+   path: gen/db  
+   parameters:
+     buildpack: nodejs_buildpack
+   requires:
+    # 'hana' and 'xsuaa' resources extracted from CAP configuration
+    - name: bookshop-db
+    - name: bookshop-uaa
+    
+
+ # --------------------- APPROUTER MODULE ---------------------
+ - name: my-bookshop-router
+ # ------------------------------------------------------------
+   type: approuter.nodejs
+   path: app  
+   parameters:
+     disk-quota: 256M
+     memory: 256M
+   requires:
+     - name: bookshop-uaa
+     - name: db-srv-api
+       group: destinations
+       properties:
+         name: db-srv-api
+         url: ~{url}
+         forwardAuthToken: true
+
+    
+
+resources:
+ # services extracted from CAP configuration
+ # 'service-plan' can be configured via 'cds.requires.<name>.vcap.plan'
+
+ - name: bookshop-dest
+   type: org.cloudfoundry.managed-service
+   parameters:
+     service: destination
+     service-name: bookshop-dest
+     service-plan: lite
+
+# ------------------------------------------------------------
+ - name: bookshop-db
+# ------------------------------------------------------------
+   type: com.sap.xs.hdi-container
+   parameters:
+     service: hana  # or 'hanatrial' on trial landscapes
+     service-plan: hdi-shared
+   properties:
+     hdi-service-name: ${service-name}
+
+
+
+### XSUAA service instance      
+ - name: bookshop-uaa
+   parameters:
+     path: ./xs-security.json  
+     service: xsuaa    
+     service-plan: application
+     service-keys: 
+       - name: bookshop-uaa-key      
+     type: org.cloudfoundry.managed-service    

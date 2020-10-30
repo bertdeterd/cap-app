@@ -1,0 +1,20 @@
+{
+  "xsappname": "bookshop",
+  "tenant-mode": "dedicated",
+  "description": "BD test",
+  "scopes": [
+    {
+      "name": "uaa.user",
+      "description": "UAA"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "bookshop_exch",
+      "description": "UAA",
+      "scope-references": [
+        "uaa.user"
+      ]
+    }
+  ]
+}  

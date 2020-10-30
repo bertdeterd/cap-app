@@ -1,0 +1,16 @@
+{
+  "welcomeFile": "index.html",
+  "authenticationMethod": "route",
+  "routes": [
+    {
+      "source": "^/(.*)",
+      "destination": "db-srv-api"
+    },
+    {
+      "source": "^/index.html$",
+      "localDir": "resources",
+      "authenticationType": "xsuaa",
+      "cacheControl": "no-cache, no-store"
+    }
+  ]
+}

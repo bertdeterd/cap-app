@@ -1,0 +1,17 @@
+{
+  "name": "bookshoprouter",
+  "version": "1.0.0",
+  "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node node_modules/@sap/approuter/approuter.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@sap/approuter": "^8.5.4",
+    "@sap/xsenv": "^3.0.0",
+    "express": "^4.17.1",
+    "request": "^2.88.2"
+  }
+}

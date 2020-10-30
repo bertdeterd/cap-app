@@ -1,0 +1,53 @@
+{
+  "name": "bookshop",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/audit-logging": "^3.2.0",
+    "@sap/cds": "^4",
+    "@sap/hana-client": "^2.6.58",
+    "@sap/xsenv": "^3.0.0",
+    "@sap/xssec": "^3.0.10",
+    "express": "^4"
+  },
+  "devDependencies": {
+    "sqlite3": "^5.0.0"
+  },
+  "scripts": {
+    "start": "cds run",
+    "deploy": "cf deploy mta_archives/bookshop_1.0.0.mtar"
+  },
+  "cds": {
+    "hana": {
+      "deploy-format": "hdbtable"
+    },
+    "requires": {
+      "db": {
+        "kind": "sql"
+      },
+      "uaa": {
+        "kind": "xsuaa"
+      },
+      "auth": {
+        "strategy": "JWT",
+        "kind": "xsuaa",
+        "users": {
+          "admin": {
+            "roles": [
+              "admin"
+            ]
+          },
+          "builder": {
+            "roles": [
+              "builder"
+            ]
+          },
+          "*": true
+        }
+      }
+    }
+  }
+}
